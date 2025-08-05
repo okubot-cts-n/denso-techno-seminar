@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1日5分から隙間時間で始める英語習慣</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.8s ease-in-out;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide.prev {
+            transform: translateX(-100%);
+        }
+
+        .slide-title {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .slide-subtitle {
+            font-size: 1.5rem;
+            color: #34495e;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .slide-content {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            text-align: center;
+            max-width: 800px;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .device-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .device-card {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .device-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .device-card p {
+            font-size: 1rem;
+        }
+
+        .input-output-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .io-card {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .io-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tool-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .tool-item {
+            background: linear-gradient(135deg, #00b894, #00a085);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            z-index: 1000;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00b894, #00cec9);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .slide-number {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 1000;
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bounce {
+            animation: bounce 0.6s ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="slide-number" id="slideNumber">1 / 26</div>
+
+    <div class="slide-container">
+        <!-- スライド1: タイトル -->
+        <div class="slide active" data-duration="3000">
+            <h1 class="slide-title fade-in">1日5分から<br>隙間時間で始める<br>英語習慣</h1>
+            <p class="slide-subtitle">デンソーテクノセミナー</p>
+        </div>
+
+        <!-- スライド2: 問いかけ -->
+        <div class="slide" data-duration="4000">
+            <h2 class="slide-title">1日5分って<br>どこにありますか？</h2>
+            <p class="slide-content">皆さんの生活の中で<br>5分の時間を探してみましょう</p>
+        </div>
+
+        <!-- スライド3: 環境の違い -->
+        <div class="slide" data-duration="4000">
+            <h2 class="slide-title">5分って探せばあるけど<br>環境によって全く<br>できることが違う</h2>
+            <p class="slide-content">そのポイントは「人間のデバイス」です</p>
+        </div>
+
+        <!-- スライド4: デバイス紹介 -->
+        <div class="slide" data-duration="5000">
+            <h2 class="slide-title">人間のデバイス</h2>
+            <div class="device-grid">
+                <div class="device-card bounce">
+                    <h3>👂 耳</h3>
+                    <p>聞く</p>
+                </div>
+                <div class="device-card bounce">
+                    <h3>👁️ 目</h3>
+                    <p>見る</p>
+                </div>
+                <div class="device-card bounce">
+                    <h3>✋ 手</h3>
+                    <p>操作する</p>
+                </div>
+                <div class="device-card bounce">
+                    <h3>👄 口</h3>
+                    <p>話す</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- スライド5: 環境例1 -->
+        <div class="slide" data-duration="4000">
+            <h2 class="slide-title">朝支度の時間</h2>
+            <p class="slide-content">目は使えないが<br><span class="highlight">耳と口は使える</span></p>
+        </div>
+
+        <!-- スライド6: 環境例2 -->
+        <div class="slide" data-duration="4000">
+            <h2 class="slide-title">電車通勤</h2>
+            <p class="slide-content">目と耳は使えるが<br><span class="highlight">手と口は使えない</span></p>
+        </div>
+
+        <!-- スライド7: デバイス分類 -->
+        <div class="slide" data-duration="5000">
+            <h2 class="slide-title">デバイスの分類</h2>
+            <div class="input-output-grid">
+                <div class="io-card">
+                    <h3>インプット</h3>
+                    <p>耳・目</p>
+                </div>
+                <div class="io-card">
+                    <h3>アウトプット</h3>
+                    <p>手・口</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- スライド8: インプットデバイスの活用 -->
+        <div class="slide" data-duration="4000">
+            <h2 class="slide-title">インプットデバイスの活用</h2>
+            <p class="slide-content">耳と目を使った学習法<br>2つの情報収集に分かれます</p>
+        </div>
+
+        <!-- スライド9: 2つの情報収集 -->
+        <div class="slide" data-duration="4000">
+            <h2 class="slide-title">2つの情報収集</h2>
+            <div class="input-output-grid">
+                <div class="io-card">
+                    <h3>受動的情報収集</h3>
+                    <p>流れてくる情報</p>
+                </div>
+                <div class="io-card">
+                    <h3>能動的インプット</h3>
+                    <p>自分から選ぶ</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- スライド10: 受動的 -->
+        <div class="slide" data-duration="4000">
+            <h2 class="slide-title">受動的情報収集</h2>
+            <p class="slide-content">ショート動画のタイムライン<br>向いている学習法</p>
+        </div>
+
+        <!-- スライド11: アルゴリズム活用 -->
+        <div class="slide" data-duration="5000">
+            <h2 class="slide-title">アルゴリズムを味方に</h2>
+            <p class="slide-content">自分へのオススメを<br>どんどん出してくれる</p>
+        </div>
+
+        <!-- スライド12: アルゴリズム活用のコツ -->
+        <div class="slide" data-duration="5000">
+            <h2 class="slide-title">アルゴリズム活用のコツ</h2>
+            <div class="tool-list">
+                <div class="tool-item">検索をしたり</div>
+                <div class="tool-item">フォローをしたり</div>
+                <div class="tool-item">どんどん情報が入ってくる</div>
+            </div>
+            <p class="slide-content">あえて自分ではしないような<br>「検索」や「フォロー」をする</p>
+        </div>
+
+        <!-- スライド13: 適したツール -->
+        <div class="slide" data-duration="5000">
+            <h2 class="slide-title">適したツール</h2>
+            <div class="tool-list">
+                <div class="tool-item">YouTube</div>
+                <div class="tool-item">TikTok</div>
+                <div class="tool-item">Instagram</div>
+            </div>
+        </div>
+
+        <!-- スライド14: 検索して呼び寄せる例 -->
+        <div class="slide" data-duration="5000">
+            <h2 class="slide-title">検索して呼び寄せる例</h2>
+            <div class="tool-list">
+                <div class="tool-item">海外業界情報</div>
+                <div class="tool-item">トレンド・ビジネス</div>
+                <div class="tool-item">英語学習Tips</div>
+            </div>
+            <p class="slide-content">これらを検索・フォローすると<br>関連情報が流れてくる</p>
+        </div>
+
+        <!-- スライド15: フォロー例 -->
+        <div class="slide" data-duration="5000">
+            <h2 class="slide-title">フォロー例</h2>
+            <div class="tool-list">
+                <div class="tool-item">MrBeast</div>
+                <div class="tool-item">PewDiePie</div>
+                <div class="tool-item">Dude Perfect</div>
+            </div>
+            <p class="slide-content">海外有名インフルエンサー<br>フォローすると海外カルチャーがわかる</p>
+        </div>
+
+        <!-- スライド16: 能動的インプット -->
+        <div class="slide" data-duration="4000">
+            <h2 class="slide-title">能動的インプット</h2>
+            <p class="slide-content">受動的で興味が湧いた後<br>欲しい情報がわかっている<br>ケースに向いている</p>
+        </div>
+
+        <!-- スライド17: 適したツール -->
+        <div class="slide" data-duration="5000">
+            <h2 class="slide-title">適したツール</h2>
+            <div class="tool-list">
+                <div class="tool-item">Podcast</div>
+                <div class="tool-item">YouTube</div>
+                <div class="tool-item">シリーズ物</div>
+            </div>
+        </div>
+
+        <!-- スライド18: 学習方法 -->
+        <div class="slide" data-duration="5000">
+            <h2 class="slide-title">学習方法</h2>
+            <p class="slide-content">欲しい情報が定まっている際に<br>シリーズもので見たり聞いたり<br>英語のフレーズや学習法</p>
+        </div>
+
+        <!-- スライド19: おすすめコンテンツ -->
+        <div class="slide" data-duration="5000">
+            <h2 class="slide-title">おすすめコンテンツ</h2>
+            <div class="tool-list">
+                <div class="tool-item">Breaking News English</div>
+                <div class="tool-item">バイリンガール</div>
+                <div class="tool-item">関先生の動画</div>
+            </div>
+            <p class="slide-content">シリーズ化された学習コンテンツ</p>
+        </div>
+
+        <!-- スライド20: 学習のポイント -->
+        <div class="slide" data-duration="4000">
+            <h2 class="slide-title">学習のポイント</h2>
+            <p class="slide-content">継続しやすいシリーズものを選ぶ<br>興味のある分野から始める<br>少しずつ習慣化する</p>
+        </div>
+
+        <!-- スライド21: アウトプットデバイス -->
+        <div class="slide" data-duration="4000">
+            <h2 class="slide-title">アウトプットデバイス</h2>
+            <p class="slide-content">手と口を使った学習<br>より積極的な練習</p>
+        </div>
+
+        <!-- スライド22: 手が使える場合 -->
+        <div class="slide" data-duration="5000">
+            <h2 class="slide-title">手が使える場合</h2>
+            <div class="tool-list">
+                <div class="tool-item">Duolingo</div>
+                <div class="tool-item">abceed</div>
+                <div class="tool-item">スタディサプリ</div>
+            </div>
+            <p class="slide-content">学習アプリ・クイズ形式が向いている</p>
+        </div>
+
+        <!-- スライド23: 口が使える場合 -->
+        <div class="slide" data-duration="5000">
+            <h2 class="slide-title">口が使える場合</h2>
+            <div class="tool-list">
+                <div class="tool-item">シャドテン</div>
+                <div class="tool-item">スピフル</div>
+                <div class="tool-item">AI英会話</div>
+            </div>
+            <p class="slide-content">発声や会話ができる練習ツールが適している</p>
+        </div>
+
+        <!-- スライド24: オンライン英会話 -->
+        <div class="slide" data-duration="5000">
+            <h2 class="slide-title">オンライン英会話</h2>
+            <div class="tool-list">
+                <div class="tool-item">Native Camp</div>
+                <div class="tool-item">DMM英会話</div>
+                <div class="tool-item">レアジョブ</div>
+            </div>
+            <p class="slide-content">いますぐレッスン<br>5分から始められる</p>
+        </div>
+
+        <!-- スライド25: まとめ -->
+        <div class="slide" data-duration="5000">
+            <h2 class="slide-title">まとめ</h2>
+            <p class="slide-content">デバイス別アプローチ<br>環境に合わせた学習法<br>段階的なステップアップ</p>
+        </div>
+
+        <!-- スライド26: 次のステップ -->
+        <div class="slide" data-duration="4000">
+            <h2 class="slide-title">次のステップ</h2>
+            <p class="slide-content">10月期自己啓発プログラム<br>8月26日〜9月2日<br>説明会ウィーク</p>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressFill = document.getElementById('progressFill');
+        const slideNumber = document.getElementById('slideNumber');
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active', 'prev');
+                if (i === index) {
+                    slide.classList.add('active');
+                } else if (i < index) {
+                    slide.classList.add('prev');
+                }
+            });
+
+            // プログレスバー更新
+            const progress = ((index + 1) / totalSlides) * 100;
+            progressFill.style.width = progress + '%';
+
+            // スライド番号更新
+            slideNumber.textContent = `${index + 1} / ${totalSlides}`;
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        // キーボード操作
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                showSlide(currentSlide);
+            }
+        });
+
+        // クリック操作
+        document.addEventListener('click', () => {
+            nextSlide();
+        });
+
+        // 初期化
+        showSlide(0);
+    </script>
+</body>
+</html> 
